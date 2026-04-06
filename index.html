@@ -353,14 +353,17 @@ document.querySelectorAll('.legend').forEach(legend => {
     item.addEventListener('mouseenter', () => {
       clearTimeout(leaveTimer);
       currentHoverIdx = idx;
+      hoveredIdx = idx;
       if (cmdDown) {
-        hoveredIdx = idx;
         if (hasSelection()) { if (isSelected(idx)) applyInverseHover(idx); else applySelectedHoverNormal(idx); }
         else applyInverseHover(idx);
         return;
       }
       if (hasSelection()) {
+        // Always reset to clean selected state first
+        applySelected();
         if (emptySelection) {
+          // Show only hovered
           items.forEach((it, i) => {
             const d = it.querySelector('.legend-dot');
             if (i === idx) { it.style.color = 'rgba(0,0,0,.7)'; if (d) { d.style.background = dotColors[i]; d.style.opacity = '1'; } }
@@ -372,8 +375,10 @@ document.querySelectorAll('.legend').forEach(legend => {
             else { ds.backgroundColor = setOpacity(originalBgColors[i], 0); ds.borderColor = setOpacity(originalBorderColors[i], 0); ds.borderWidth = 0; }
           });
           recalcFills(vis); chartInstance.update('none');
-        } else if (isSelected(idx)) { applySelected(); applyLegendStyles(); item.style.color = 'rgba(0,0,0,.7)'; }
-        else {
+        } else if (isSelected(idx)) {
+          // Hovering on selected: just brighten text
+          item.style.color = 'rgba(0,0,0,.7)';
+        } else {
           // Inverse: selected stays full, hovered shows dimmed preview
           items.forEach((it, i) => {
             const d = it.querySelector('.legend-dot');
