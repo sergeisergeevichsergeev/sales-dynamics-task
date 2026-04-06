@@ -196,8 +196,7 @@ document.querySelectorAll('.legend').forEach(legend => {
     hintEl.classList.add('visible');
   }
 
-  const dotColors = [];
-  items.forEach(item => { const dot = item.querySelector('.legend-dot'); dotColors.push(dot ? dot.style.backgroundColor : ''); });
+  const dotColors = ['#3D97F2', '#FF6A59', '#7FD169', '#FFB433'];
 
   let selectedIdx = -1;
   const selectedSet = new Set();
