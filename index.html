@@ -34,10 +34,7 @@ body{font-family:var(--font);color:var(--text);background:var(--bg);min-height:1
   color:rgba(0,0,0,.5);cursor:pointer;position:relative;
 }
 .legend-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
-.legend.anim-hover .legend-item{transition:color .3s ease}
-.legend.anim-hover .legend-dot{transition:opacity .3s ease}
-.legend.anim-leave .legend-item{transition:color .7s ease}
-.legend.anim-leave .legend-dot{transition:opacity .7s ease}
+
 
 /* Compare Hint */
 .compare-hint{
@@ -203,8 +200,6 @@ document.querySelectorAll('.legend').forEach(legend => {
   let leaveTimer = null;
 
   function applyHoverState(hIdx) {
-    legend.classList.remove('anim-leave');
-    legend.classList.add('anim-hover');
     hoveredIdx = hIdx;
     items.forEach((it, i) => {
       const d = it.querySelector('.legend-dot');
@@ -216,22 +211,15 @@ document.querySelectorAll('.legend').forEach(legend => {
       else { ds.backgroundColor = setOpacity(originalBgColors[i], 0.15); ds.borderColor = setOpacity(originalBorderColors[i], 0.3); ds.borderWidth = 1; }
     });
     recalcFills(null);
-    chartInstance.options.animation = {duration: 300, easing: 'easeOutQuart'};
-    chartInstance.update();
-    chartInstance.options.animation = {duration: 0};
+    chartInstance.update('none');
   }
 
   function clearHoverState() {
-    legend.classList.remove('anim-hover');
-    legend.classList.add('anim-leave');
     hoveredIdx = -1;
     items.forEach((it, i) => { const d = it.querySelector('.legend-dot'); it.style.color = ''; if (d) { d.style.background = dotColors[i]; d.style.opacity = ''; } });
     chartInstance.data.datasets.forEach((ds, i) => { ds.backgroundColor = originalBgColors[i]; ds.borderColor = originalBorderColors[i]; ds.borderWidth = 1.5; });
     recalcFills(null);
-    chartInstance.options.animation = {duration: 700, easing: 'easeOutQuart'};
-    chartInstance.update();
-    chartInstance.options.animation = {duration: 0};
-    setTimeout(() => { legend.classList.remove('anim-leave'); }, 750);
+    chartInstance.update('none');
   }
 
   function isSelected(i) { if (selectedSet.size > 0) return selectedSet.has(i); if (selectedIdx >= 0) return i === selectedIdx; return false; }
@@ -360,7 +348,7 @@ document.querySelectorAll('.legend').forEach(legend => {
       clearTimeout(leaveTimer);
       currentHoverIdx = idx;
       hoveredIdx = idx;
-      if (hasSelection()) { legend.classList.remove('anim-hover', 'anim-leave'); }
+
       if (cmdDown) {
         if (hasSelection()) { if (isSelected(idx)) applyInverseHover(idx); else applySelectedHoverNormal(idx); }
         else applyInverseHover(idx);
@@ -422,7 +410,6 @@ document.querySelectorAll('.legend').forEach(legend => {
 
     item.addEventListener('click', (e) => {
       clearTimeout(leaveTimer);
-      legend.classList.remove('anim-hover', 'anim-leave');
       clickLocked = true;
 
       if (e.metaKey || e.ctrlKey) {
@@ -447,7 +434,6 @@ document.querySelectorAll('.legend').forEach(legend => {
       }
 
       applySelected();
-      setTimeout(() => { chartInstance.options.animation = {duration: 0}; }, 750);
     });
   });
 });
