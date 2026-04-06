@@ -285,7 +285,20 @@ document.querySelectorAll('.legend').forEach(legend => {
           });
           recalcFills(vis); chartInstance.update('none');
         } else if (isSelected(idx)) { applySelected(); }
-        else { if (dot) dot.style.background = 'rgba(0,0,0,.25)'; applySelected(); }
+        else {
+          // Inverse preview in reapplyHover
+          applyLegendStyles();
+          item.style.color = 'rgba(0,0,0,.4)';
+          const d = item.querySelector('.legend-dot');
+          if (d) { d.style.background = dotColors[idx]; d.style.opacity = '0.4'; }
+          const vis = new Set();
+          chartInstance.data.datasets.forEach((ds, i) => {
+            if (isSelected(i)) { ds.backgroundColor = originalBgColors[i]; ds.borderColor = originalBorderColors[i]; ds.borderWidth = 2; vis.add(i); }
+            else if (i === idx) { ds.backgroundColor = setOpacity(originalBgColors[i], 0.3); ds.borderColor = setOpacity(originalBorderColors[i], 0.5); ds.borderWidth = 1.5; vis.add(i); }
+            else { ds.backgroundColor = setOpacity(originalBgColors[i], 0); ds.borderColor = setOpacity(originalBorderColors[i], 0); ds.borderWidth = 0; }
+          });
+          recalcFills(vis); chartInstance.update('none');
+        }
       } else applyHoverState(idx);
     }
   }
@@ -361,16 +374,17 @@ document.querySelectorAll('.legend').forEach(legend => {
           recalcFills(vis); chartInstance.update('none');
         } else if (isSelected(idx)) { applyLegendStyles(); item.style.color = 'rgba(0,0,0,.7)'; }
         else {
+          // Inverse: selected stays full, hovered shows dimmed preview
           items.forEach((it, i) => {
             const d = it.querySelector('.legend-dot');
-            if (i === idx) { it.style.color = 'rgba(0,0,0,.7)'; if (d) { d.style.background = dotColors[i]; d.style.opacity = '1'; } }
-            else if (isSelected(i)) { it.style.color = 'rgba(0,0,0,.3)'; if (d) { d.style.background = dotColors[i]; d.style.opacity = '0.3'; } }
+            if (isSelected(i)) { it.style.color = 'rgba(0,0,0,.5)'; if (d) { d.style.background = dotColors[i]; d.style.opacity = ''; } }
+            else if (i === idx) { it.style.color = 'rgba(0,0,0,.4)'; if (d) { d.style.background = dotColors[i]; d.style.opacity = '0.4'; } }
             else { it.style.color = 'rgba(0,0,0,.3)'; if (d) { d.style.background = 'rgba(0,0,0,.15)'; d.style.opacity = ''; } }
           });
-          const vis = new Set([idx]);
+          const vis = new Set();
           chartInstance.data.datasets.forEach((ds, i) => {
-            if (i === idx) { ds.backgroundColor = originalBgColors[i]; ds.borderColor = originalBorderColors[i]; ds.borderWidth = 4; vis.add(i); }
-            else if (isSelected(i)) { ds.backgroundColor = setOpacity(originalBgColors[i], 0.25); ds.borderColor = setOpacity(originalBorderColors[i], 0.4); ds.borderWidth = 1.5; vis.add(i); }
+            if (isSelected(i)) { ds.backgroundColor = originalBgColors[i]; ds.borderColor = originalBorderColors[i]; ds.borderWidth = 2; vis.add(i); }
+            else if (i === idx) { ds.backgroundColor = setOpacity(originalBgColors[i], 0.3); ds.borderColor = setOpacity(originalBorderColors[i], 0.5); ds.borderWidth = 1.5; vis.add(i); }
             else { ds.backgroundColor = setOpacity(originalBgColors[i], 0); ds.borderColor = setOpacity(originalBorderColors[i], 0); ds.borderWidth = 0; }
           });
           recalcFills(vis); chartInstance.update('none');
