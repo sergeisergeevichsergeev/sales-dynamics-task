@@ -34,10 +34,10 @@ body{font-family:var(--font);color:var(--text);background:var(--bg);min-height:1
   color:rgba(0,0,0,.5);cursor:pointer;position:relative;
 }
 .legend-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
-.legend.animating .legend-item{transition:color .3s ease}
-.legend.animating .legend-dot{transition:opacity .3s ease}
-.legend.fade-out .legend-item{transition:color .7s ease}
-.legend.fade-out .legend-dot{transition:opacity .7s ease}
+.legend.animating .legend-item{transition:none}
+.legend.animating .legend-dot{transition:none}
+.legend.fade-out .legend-item{transition:none}
+.legend.fade-out .legend-dot{transition:none}
 
 /* Compare Hint */
 .compare-hint{
@@ -86,9 +86,9 @@ body{font-family:var(--font);color:var(--text);background:var(--bg);min-height:1
 
 <script>
 const fontFamily='YS Text';
-Chart.defaults.animation.duration=300;
+Chart.defaults.animation.duration=0;
 Chart.defaults.animation.easing='easeOutQuart';
-Chart.defaults.transitions.active={animation:{duration:200,easing:'easeOutQuart'}};
+Chart.defaults.transitions.active={animation:{duration:0}};
 const gridColor='#f0f1f3';
 const tickColor='rgba(0,0,0,0.5)';
 const tickFont={size:11,family:'Lucida Grande',lineHeight:13/11,weight:'400'};
@@ -387,16 +387,16 @@ document.querySelectorAll('.legend').forEach(legend => {
       leaveTimer = setTimeout(() => {
         if (currentHoverIdx >= 0) return;
         hoveredIdx = -1;
-        chartInstance.options.animation.duration = 700;
+        chartInstance.options.animation.duration = 0;
         legend.classList.remove('animating'); legend.classList.add('fade-out');
         if (hasSelection()) { applyLegendStyles(); applySelected(); } else clearHoverState();
-        setTimeout(() => { chartInstance.options.animation.duration = 300; legend.classList.remove('fade-out'); }, 750);
+        setTimeout(() => { chartInstance.options.animation.duration = 0; legend.classList.remove('fade-out'); }, 750);
       }, 80);
     });
 
     item.addEventListener('click', (e) => {
       clearTimeout(leaveTimer);
-      chartInstance.options.animation.duration = 700;
+      chartInstance.options.animation.duration = 0;
       legend.classList.remove('animating'); legend.classList.add('fade-out');
       clickLocked = true;
 
@@ -422,7 +422,7 @@ document.querySelectorAll('.legend').forEach(legend => {
       }
 
       applySelected();
-      setTimeout(() => { chartInstance.options.animation.duration = 300; legend.classList.remove('fade-out'); }, 750);
+      setTimeout(() => { chartInstance.options.animation.duration = 0; legend.classList.remove('fade-out'); }, 750);
     });
   });
 });
