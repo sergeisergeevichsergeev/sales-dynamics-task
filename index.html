@@ -86,9 +86,7 @@ body{font-family:var(--font);color:var(--text);background:var(--bg);min-height:1
 
 <script>
 const fontFamily='YS Text';
-Chart.defaults.animation.duration=0;
-Chart.defaults.animation.easing='easeOutQuart';
-Chart.defaults.transitions.active={animation:{duration:0}};
+Chart.defaults.animation = false;
 const gridColor='#f0f1f3';
 const tickColor='rgba(0,0,0,0.5)';
 const tickFont={size:11,family:'Lucida Grande',lineHeight:13/11,weight:'400'};
@@ -217,7 +215,7 @@ document.querySelectorAll('.legend').forEach(legend => {
       else { ds.backgroundColor = setOpacity(originalBgColors[i], 0.15); ds.borderColor = setOpacity(originalBorderColors[i], 0.3); ds.borderWidth = 1; }
     });
     recalcFills(null);
-    chartInstance.update();
+    chartInstance.update('none');
   }
 
   function clearHoverState() {
@@ -226,7 +224,7 @@ document.querySelectorAll('.legend').forEach(legend => {
     items.forEach((it, i) => { const d = it.querySelector('.legend-dot'); it.style.color = ''; if (d) { d.style.background = dotColors[i]; d.style.opacity = ''; } });
     chartInstance.data.datasets.forEach((ds, i) => { ds.backgroundColor = originalBgColors[i]; ds.borderColor = originalBorderColors[i]; ds.borderWidth = 1.5; });
     recalcFills(null);
-    chartInstance.update();
+    chartInstance.update('none');
   }
 
   function isSelected(i) { if (selectedSet.size > 0) return selectedSet.has(i); if (selectedIdx >= 0) return i === selectedIdx; return false; }
@@ -255,7 +253,7 @@ document.querySelectorAll('.legend').forEach(legend => {
       recalcFills(null);
     }
     applyLegendStyles();
-    chartInstance.update();
+    chartInstance.update('none');
   }
 
   let cmdDown = false;
@@ -285,7 +283,7 @@ document.querySelectorAll('.legend').forEach(legend => {
             if (i === idx) { ds.backgroundColor = originalBgColors[i]; ds.borderColor = originalBorderColors[i]; ds.borderWidth = 2; }
             else { ds.backgroundColor = setOpacity(originalBgColors[i], 0); ds.borderColor = setOpacity(originalBorderColors[i], 0); ds.borderWidth = 0; }
           });
-          recalcFills(vis); chartInstance.update();
+          recalcFills(vis); chartInstance.update('none');
         } else if (isSelected(idx)) { applySelected(); }
         else { if (dot) dot.style.background = 'rgba(0,0,0,.25)'; applySelected(); }
       } else applyHoverState(idx);
@@ -319,7 +317,7 @@ document.querySelectorAll('.legend').forEach(legend => {
       });
       recalcFills(null);
     }
-    chartInstance.update();
+    chartInstance.update('none');
   }
 
   function applySelectedHoverNormal(hIdx) {
@@ -335,7 +333,7 @@ document.querySelectorAll('.legend').forEach(legend => {
       else { ds.backgroundColor = setOpacity(originalBgColors[i], 0); ds.borderColor = setOpacity(originalBorderColors[i], 0); ds.borderWidth = 0; }
     });
     recalcFills(vis);
-    chartInstance.update();
+    chartInstance.update('none');
   }
 
   items.forEach((item, idx) => {
@@ -360,7 +358,7 @@ document.querySelectorAll('.legend').forEach(legend => {
             if (i === idx) { ds.backgroundColor = originalBgColors[i]; ds.borderColor = originalBorderColors[i]; ds.borderWidth = 2; }
             else { ds.backgroundColor = setOpacity(originalBgColors[i], 0); ds.borderColor = setOpacity(originalBorderColors[i], 0); ds.borderWidth = 0; }
           });
-          recalcFills(vis); chartInstance.update();
+          recalcFills(vis); chartInstance.update('none');
         } else if (isSelected(idx)) { applyLegendStyles(); item.style.color = 'rgba(0,0,0,.7)'; }
         else {
           items.forEach((it, i) => {
@@ -375,7 +373,7 @@ document.querySelectorAll('.legend').forEach(legend => {
             else if (isSelected(i)) { ds.backgroundColor = setOpacity(originalBgColors[i], 0.25); ds.borderColor = setOpacity(originalBorderColors[i], 0.4); ds.borderWidth = 1.5; vis.add(i); }
             else { ds.backgroundColor = setOpacity(originalBgColors[i], 0); ds.borderColor = setOpacity(originalBorderColors[i], 0); ds.borderWidth = 0; }
           });
-          recalcFills(vis); chartInstance.update();
+          recalcFills(vis); chartInstance.update('none');
         }
         return;
       }
