@@ -226,7 +226,7 @@ document.querySelectorAll('.legend').forEach(legend => {
     recalcFills(null);
     chartInstance.options.animation = {duration: 700, easing: 'easeOutQuart'};
     chartInstance.update();
-    chartInstance.options.animation = false;
+    setTimeout(() => { chartInstance.options.animation = {duration: 0}; }, 750);
   }
 
   function isSelected(i) { if (selectedSet.size > 0) return selectedSet.has(i); if (selectedIdx >= 0) return i === selectedIdx; return false; }
