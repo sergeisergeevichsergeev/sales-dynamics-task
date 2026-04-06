@@ -367,8 +367,6 @@ document.querySelectorAll('.legend').forEach(legend => {
         return;
       }
       if (hasSelection()) {
-        // Always reset to clean selected state first
-        applySelected();
         if (emptySelection) {
           // Show only hovered
           items.forEach((it, i) => {
@@ -383,7 +381,14 @@ document.querySelectorAll('.legend').forEach(legend => {
           });
           recalcFills(vis); chartInstance.update('none');
         } else if (isSelected(idx)) {
-          // Hovering on selected: just brighten text
+          // Hovering on selected: restore selected state, brighten text
+          applyLegendStyles();
+          const vis = new Set();
+          chartInstance.data.datasets.forEach((ds, i) => {
+            if (isSelected(i)) { ds.backgroundColor = originalBgColors[i]; ds.borderColor = originalBorderColors[i]; ds.borderWidth = 2; vis.add(i); }
+            else { ds.backgroundColor = setOpacity(originalBgColors[i], 0); ds.borderColor = setOpacity(originalBorderColors[i], 0); ds.borderWidth = 0; }
+          });
+          recalcFills(vis); chartInstance.update('none');
           item.style.color = 'rgba(0,0,0,.7)';
         } else {
           // Inverse: selected stays full, hovered shows dimmed preview
