@@ -47,10 +47,11 @@ body{font-family:var(--font);color:var(--text);background:var(--bg);min-height:1
 /* Compare Hint */
 .compare-hint{
   position:absolute;bottom:calc(100% + 12px);
-  width:282px;background:#fff;border:1px solid rgba(0,0,0,.1);border-radius:5px;
+  width:auto;background:#fff;border:1px solid rgba(0,0,0,.1);border-radius:5px;
   padding:16px;z-index:200;
   box-shadow:0 4px 16px rgba(0,0,0,.08);
-  opacity:0;pointer-events:none;transition:opacity .15s;
+  opacity:0;pointer-events:none;
+  white-space:nowrap;
 }
 .compare-hint.visible{opacity:1;pointer-events:auto}
 .compare-hint::after{
@@ -65,6 +66,12 @@ body{font-family:var(--font);color:var(--text);background:var(--bg);min-height:1
 }
 .compare-hint__title{font-family:var(--font);font-size:17px;line-height:24px;font-weight:500;color:rgba(0,0,0,.85);margin-bottom:10px}
 .compare-hint__desc{font-size:13px;line-height:18px;font-weight:400;color:rgba(0,0,0,.85);margin-bottom:20px}
+.compare-hint__kbd{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:67px;height:20px;border-radius:3px;
+  background:rgba(0,0,0,.05);font-size:11px;line-height:14px;font-weight:400;
+  font-family:var(--font);color:rgba(0,0,0,.85);flex-shrink:0;
+}
 .compare-hint__actions{display:flex}
 .compare-hint__btn-compare{
   display:flex;align-items:center;justify-content:center;gap:8px;
@@ -210,7 +217,7 @@ document.querySelectorAll('.legend').forEach(legend => {
   let hintPrevIdx = -1;
   const hintEl = document.createElement('div');
   hintEl.className = 'compare-hint';
-  hintEl.innerHTML = '<div class="compare-hint__title">\u2318 + \u041a\u043b\u0438\u043a</div><div class="compare-hint__desc">\u0414\u043b\u044f \u0441\u0440\u0430\u0432\u043d\u0435\u043d\u0438\u044f \u0433\u0440\u0430\u0444\u0438\u043a\u043e\u0432</div><div class="compare-hint__actions"><button class="compare-hint__btn-compare">\u0421\u043f\u0430\u0441\u0438\u0431\u043e, \u043f\u043e\u043f\u0440\u043e\u0431\u0443\u044e!</button></div>';
+  hintEl.innerHTML = '<div class="compare-hint__title">⌘ + Клик</div><div class="compare-hint__desc">Добавить или убрать график</div><div class="compare-hint__actions"><button class="compare-hint__btn-compare">Понятно</button></div>';
   legend.style.position = 'relative';
   legend.appendChild(hintEl);
   hintEl.querySelector('.compare-hint__btn-compare').addEventListener('click', () => hintEl.classList.remove('visible'));
@@ -221,7 +228,7 @@ document.querySelectorAll('.legend').forEach(legend => {
     const legendRect = legend.getBoundingClientRect();
     const itemRect = clickedItem.getBoundingClientRect();
     const itemCenterX = itemRect.left + itemRect.width / 2 - legendRect.left;
-    const hintWidth = 282;
+    const hintWidth = hintEl.offsetWidth;
     let hintLeft = itemCenterX - hintWidth / 2;
     if (hintLeft < 0) hintLeft = 0;
     if (hintLeft + hintWidth > legendRect.width) hintLeft = legendRect.width - hintWidth;
